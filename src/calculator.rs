@@ -9,10 +9,10 @@ pub fn compute(instructions:&mut [&str])->f64{
             Stack::pop(&mut stack,&mut num1);
             Stack::pop(&mut stack,&mut num2);
             let result=match &*expression{
-                "+"=>num1+num2,
-                "-"=>num1-num2,
-                "*"=>num1*num2,
-                "/"=>num1/num2,
+                "+"=>num2+num1,
+                "-"=>num2-num1,
+                "*"=>num2*num1,
+                "/"=>num2/num1,
                 _=>0.0
             };
             Stack::push(&mut stack,result);
