@@ -6,19 +6,24 @@ pub fn compute(instructions:&mut [&str])->f64{
     for instruction in instructions.iter(){    
         let expression=*instruction;
         if expression=="+"||expression=="-"||expression=="*"||expression=="/" {
-            Stack::pop(&mut stack,&mut num1);
-            Stack::pop(&mut stack,&mut num2);
+            pop(&mut stack,&mut num1);
+            pop(&mut stack,&mut num2);
             let result=match &*expression{
                 "+"=>num2+num1,
                 "-"=>num2-num1,
                 "*"=>num2*num1,
-                "/"=>num2/num1,
+                "/"=>{
+                    if num1==0.0{
+                        panic!("Error: Cannot divide by 0");
+                    }
+                    num2/num1
+                },
                 _=>0.0
             };
-            Stack::push(&mut stack,result);
+            push(&mut stack,result);
         }else{
             let number:f64=expression.parse::<f64>().unwrap();
-            Stack::push(&mut stack,number);
+            push(&mut stack,number);
         }
     }
     return stack.array[(stack.sp+1) as usize];
@@ -30,4 +35,14 @@ pub fn get_math_expre(instructions:&mut [&str])->String{
         math_expre.push_str(" ");
     }
     math_expre
+}
+fn push(stack:&mut Stack,num:f64){
+    if !Stack::push(stack,num){
+        panic!("Error:Stack overflow");
+    }
+}
+fn pop(stack:&mut Stack,num:&mut f64){
+    if !Stack::pop(stack,num){
+        panic!("Error:Stack underflow");
+    }
 }
