@@ -2,8 +2,8 @@ use crate::stack::Stack as Stack;
 pub fn compute(instructions:&mut [&str])->f64{
     let mut stack:Stack=Stack::create_stack();
     let mut num1:f64=0.0;
-    let mut num2:f64=0.0;    
-    for instruction in instructions.iter(){    
+    let mut num2:f64=0.0;
+    for instruction in instructions.iter(){
         let expression=*instruction;
         if expression=="+"||expression=="-"||expression=="*"||expression=="/" {
             pop(&mut stack,&mut num1);

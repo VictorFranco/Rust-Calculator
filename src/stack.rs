@@ -12,7 +12,7 @@ impl Stack{
         }
     }
     pub fn push(&mut self,value:f64)->bool{
-        if !self.is_full(){        
+        if !self.is_full(){
             self.array[self.sp as usize]=value;
             self.sp=self.sp-1;
             return true
@@ -34,5 +34,5 @@ impl Stack{
     pub fn is_empty(&self)->bool{
         self.sp==(N as i32)-1
     }
-    
+
 }
