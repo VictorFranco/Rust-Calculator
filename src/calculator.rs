@@ -4,12 +4,14 @@ pub fn compute(instructions:&mut [&str])-> f64{
     let mut stack : Stack = Stack::create_stack();
     let mut num1  : f64 = 0.0;
     let mut num2  : f64 = 0.0;
+    let operations = ["+","-","*","/"];
+
     for instruction in instructions.iter() {
         let expression = *instruction;
-        if expression=="+"||expression=="-"||expression=="*"||expression=="/" {
+        if operations.contains(&expression) {
             pop(&mut stack,&mut num1);
             pop(&mut stack,&mut num2);
-            let result = match &*expression {
+            let result = match expression {
                 "+" => num2+num1,
                 "-" => num2-num1,
                 "*" => num2*num1,
@@ -41,12 +43,12 @@ pub fn get_math_expre(instructions:&mut [&str])-> String{
 
 fn push(stack:&mut Stack,num:f64){
     if !Stack::push(stack,num) {
-        panic!("Error:Stack overflow");
+        panic!("Error: Stack overflow");
     }
 }
 
 fn pop(stack:&mut Stack,num:&mut f64){
     if !Stack::pop(stack,num) {
-        panic!("Error:Stack underflow");
+        panic!("Error: Stack underflow");
     }
 }
