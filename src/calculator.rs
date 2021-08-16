@@ -4,11 +4,11 @@ pub fn compute(instructions:&mut [&str])-> f64{
     let mut stack : Stack = Stack::create_stack();
     let mut num1  : f64 = 0.0;
     let mut num2  : f64 = 0.0;
-    let operations = ["+","-","*","/"];
+    let operators = ["+","-","*","/"];
 
     for instruction in instructions.iter() {
         let expression = *instruction;
-        if operations.contains(&expression) {
+        if operators.contains(&expression) {
             pop(&mut stack,&mut num1);
             pop(&mut stack,&mut num2);
             let result = match expression {
@@ -51,4 +51,15 @@ fn pop(stack:&mut Stack,num:&mut f64){
     if !Stack::pop(stack,num) {
         panic!("Error: Stack underflow");
     }
+}
+
+pub fn operator_splits<'a>(instructions:&'a[&str],operator:&str)-> [&'a[&'a str];2]{
+    let mut splits:[&'a[&'a str];2] = [&[""];2];
+    for (index,instruction) in instructions.iter().enumerate() {
+        if instruction == &operator {
+            splits[0]  =  &instructions[..index];
+            splits[1]  =  &instructions[index+1..];
+        }
+    }
+    splits
 }
