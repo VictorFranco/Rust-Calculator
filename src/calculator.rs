@@ -1,6 +1,6 @@
 use crate::stack::Stack as Stack;
 
-pub fn compute(instructions:&mut [&str])-> f64{
+pub fn compute(instructions:&[&str])-> Result<f64,&'static str>{
     let mut stack : Stack = Stack::create_stack();
     let mut num1  : f64 = 0.0;
     let mut num2  : f64 = 0.0;
@@ -17,22 +17,27 @@ pub fn compute(instructions:&mut [&str])-> f64{
                 "*" => num2*num1,
                 "/" => {
                     if num1 == 0.0 {
-                        panic!("Error: Cannot divide by 0");
+                        return Err("Error: Cannot divide by 0");
                     }
                     num2/num1
                 },
                 _   => 0.0
             };
             push(&mut stack,result);
-        }else{
+        }else {
             let number : f64 = expression.parse::<f64>().unwrap();
             push(&mut stack,number);
         }
     }
-    return stack.array[(stack.sp+1) as usize];
+
+    if stack.sp != 0 {
+        Err("Error: Stack is not empty")
+    }else {
+        Ok(stack.array[0])
+    }
 }
 
-pub fn get_math_expre(instructions:&mut [&str])-> String{
+pub fn get_math_expre(instructions:&[&str])-> String{
     let mut math_expre = String::new();
     for instruction in instructions.iter() {
         math_expre.push_str(instruction);
