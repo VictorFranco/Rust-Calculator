@@ -32,14 +32,14 @@ impl<T: std::fmt::Debug + std::cmp::PartialOrd> Node<T>{
         match &self.left {
             Some(p) => {
                 print!("(");
-                Node::pre_order(&p);
+                Node::in_order(&p);
             },
             None    => {},
         }
         print!("{:?}", self.value);
         match &self.right {
             Some(p) => {
-                Node::pre_order(&p);
+                Node::in_order(&p);
                 print!(")");
             },
             None    => {},
@@ -50,13 +50,13 @@ impl<T: std::fmt::Debug + std::cmp::PartialOrd> Node<T>{
         match &self.left {
             Some(p) => {
                 print!("(");
-                Node::pre_order(&p);
+                Node::post_order(&p);
             },
             None    => {},
         }
         match &self.right {
             Some(p) => {
-                Node::pre_order(&p);
+                Node::post_order(&p);
                 print!(")");
             },
             None    => {},
