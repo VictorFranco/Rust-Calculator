@@ -1,14 +1,14 @@
-pub struct Node<String>{
-    pub left  : Option<Box<Node<String>>>,
-    pub right : Option<Box<Node<String>>>,
-    pub value : String
+pub struct Node<T>{
+    pub left  : Option<Box<Node<T>>>,
+    pub right : Option<Box<Node<T>>>,
+    pub value : T
 }
 
-pub struct Tree<String>{
-    pub root  : Option<Box<Node<String>>>
+pub struct Tree<T>{
+    pub root  : Option<Box<Node<T>>>
 }
 
-impl<String: std::fmt::Debug + std::cmp::PartialOrd> Node<String>{
+impl<T: std::fmt::Debug + std::cmp::PartialOrd> Node<T>{
 
     pub fn pre_order(&self){
         print!("{:?}", self.value);
@@ -64,7 +64,7 @@ impl<String: std::fmt::Debug + std::cmp::PartialOrd> Node<String>{
         print!("{:?}", self.value);
     }
 
-    pub fn create_node(val:String)-> Node<String>{
+    pub fn create_node(val:T)-> Node<T>{
         Node{
             left  : None,
             right : None,
@@ -72,10 +72,10 @@ impl<String: std::fmt::Debug + std::cmp::PartialOrd> Node<String>{
         }
     }
 
-    pub fn insert_node(&mut self, val:String){
+    pub fn insert_node_by_value(&mut self, val:T){
         if val<=self.value {
             match &mut self.left {
-                Some(l) => Node::insert_node(l,val),
+                Some(l) => Node::insert_node_by_value(l,val),
                 None    => {
                     let node    = Node::create_node(val);
                     let pointer = Some(Box::new(node));
@@ -84,7 +84,7 @@ impl<String: std::fmt::Debug + std::cmp::PartialOrd> Node<String>{
             }
         }else{
             match &mut self.right {
-                Some(r) => Node::insert_node(r,val),
+                Some(r) => Node::insert_node_by_value(r,val),
                 None    => {
                     let node    = Node::create_node(val);
                     let pointer = Some(Box::new(node));
@@ -95,9 +95,9 @@ impl<String: std::fmt::Debug + std::cmp::PartialOrd> Node<String>{
     }
 
 }
-impl<String: std::fmt::Debug + std::cmp::PartialOrd> Tree<String>{
+impl<T: std::fmt::Debug + std::cmp::PartialOrd> Tree<T>{
 
-    pub fn create_tree()-> Tree<String>{
+    pub fn create_tree()-> Tree<T>{
         Tree{
             root: None
         }
@@ -124,9 +124,9 @@ impl<String: std::fmt::Debug + std::cmp::PartialOrd> Tree<String>{
         }
     }
 
-    pub fn insert_node(&mut self,val:String){
+    pub fn insert_node_by_value(&mut self,val:T){
         match &mut self.root {
-            Some(p) => Node::insert_node(p,val),
+            Some(p) => Node::insert_node_by_value(p,val),
             None    => {
                 let node    = Node::create_node(val);
                 let pointer = Some(Box::new(node));
