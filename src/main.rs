@@ -1,16 +1,13 @@
 mod stack;
 mod calculator;
+mod tree;
 
 fn main() {
-    println!("Calculator\n");
+    println!("Rust Calculator\n");
 
-    let instructions = ["1", "2", "+"];
-    let result = calculator::compute(&instructions);
-    println!(">>> {}", calculator::get_math_expre(&instructions));
-    println!("{}", result.unwrap());
-
-    let instructions = ["10","5","+","20","5","+","+"];
-    let result = calculator::compute(&instructions);
-    println!(">>> {}", calculator::get_math_expre(&instructions));
-    println!("{}", result.unwrap());
+    let instructions = ["1", "+", "2", "*", "3", "-", "1", "+", "1"];
+    println!("Infix expression:");
+    println!("{}", calculator::get_math_expre(&instructions));
+    println!("\nPostfix expression:");
+    calculator::postfix_expression(&instructions);
 }

@@ -103,6 +103,7 @@ impl<T: std::fmt::Debug + std::cmp::PartialOrd> Tree<T> {
         }
     }
 
+    #[allow(dead_code)]
     pub fn pre_order(&self) {
         match &self.root {
             Some(p) => Node::pre_order(&p),
@@ -110,6 +111,7 @@ impl<T: std::fmt::Debug + std::cmp::PartialOrd> Tree<T> {
         }
     }
 
+    #[allow(dead_code)]
     pub fn in_order(&self) {
         match &self.root {
             Some(p) => Node::in_order(&p),
@@ -124,6 +126,7 @@ impl<T: std::fmt::Debug + std::cmp::PartialOrd> Tree<T> {
         }
     }
 
+    #[allow(dead_code)]
     pub fn insert_node_by_value(&mut self, val: T) {
         match &mut self.root {
             Some(p) => Node::insert_node_by_value(p, val),
@@ -133,6 +136,10 @@ impl<T: std::fmt::Debug + std::cmp::PartialOrd> Tree<T> {
                 self.root   = pointer;
             }
         }
+    }
+
+    pub fn insert_first(&mut self, root: Option<Box<Node<T>>>) {
+        self.root = root;
     }
 
 }
