@@ -1,124 +1,145 @@
-pub struct Node<String>{
-    pub left:Option<Box<Node<String>>>,
-    pub right:Option<Box<Node<String>>>,
-    pub value:String
+pub struct Node<T> {
+    pub left  : Option<Box<Node<T>>>,
+    pub right : Option<Box<Node<T>>>,
+    pub value : T
 }
-pub struct Tree<String>{
-    pub root:Option<Box<Node<String>>>
+
+pub struct Tree<T> {
+    pub root  : Option<Box<Node<T>>>
 }
-impl<String: std::fmt::Debug + std::cmp::PartialOrd> Node<String>{
-    pub fn pre_order(&self){
+
+impl<T: std::fmt::Debug + std::cmp::PartialOrd> Node<T> {
+
+    pub fn pre_order(&self) {
         print!("{:?}", self.value);
-        match &self.left{
-            Some(p)=>{
+        match &self.left {
+            Some(p) => {
                 print!("(");
                 Node::pre_order(&p);
             },
-            None=>{},
+            None    => {},
         }
-        match &self.right{
-            Some(p)=>{
+        match &self.right {
+            Some(p) => {
                 Node::pre_order(&p);
                 print!(")");
             },
-            None=>{},
+            None    => {},
         }
     }
-    pub fn in_order(&self){
-        match &self.left{
-            Some(p)=>{
+
+    pub fn in_order(&self) {
+        match &self.left {
+            Some(p) => {
                 print!("(");
-                Node::pre_order(&p);
+                Node::in_order(&p);
             },
-            None=>{},
+            None    => {},
         }
         print!("{:?}", self.value);
-        match &self.right{
-            Some(p)=>{
-                Node::pre_order(&p);
+        match &self.right {
+            Some(p) => {
+                Node::in_order(&p);
                 print!(")");
             },
-            None=>{},
+            None    => {},
         }
     }
-    pub fn post_order(&self){
-        match &self.left{
-            Some(p)=>{
+
+    pub fn post_order(&self) {
+        match &self.left {
+            Some(p) => {
                 print!("(");
-                Node::pre_order(&p);
+                Node::post_order(&p);
             },
-            None=>{},
+            None    => {},
         }
-        match &self.right{
-            Some(p)=>{
-                Node::pre_order(&p);
+        match &self.right {
+            Some(p) => {
+                Node::post_order(&p);
                 print!(")");
             },
-            None=>{},
+            None    => {},
         }
         print!("{:?}", self.value);
     }
-    pub fn create_node(val:String)->Node<String>{
-        Node{
-            left: None,
-            right: None,
-            value: val
+
+    pub fn create_node(val: T) -> Node<T> {
+        Node {
+            left  : None,
+            right : None,
+            value : val
         }
     }
-    pub fn insert_node(&mut self,val:String){
-        if val<=self.value{
-            match &mut self.left{
-                Some(l)=>Node::insert_node(l,val),
-                None=>{
-                    let node=Node::create_node(val);
-                    let pointer=Some(Box::new(node));
-                    self.left=pointer;
+
+    pub fn insert_node_by_value(&mut self, val: T) {
+        if val <= self.value {
+            match &mut self.left {
+                Some(l) => Node::insert_node_by_value(l, val),
+                None    => {
+                    let node    = Node::create_node(val);
+                    let pointer = Some(Box::new(node));
+                    self.left   = pointer;
                 }
             }
-        }else{
-            match &mut self.right{
-                Some(r)=>Node::insert_node(r,val),
-                None=>{
-                    let node=Node::create_node(val);
-                    let pointer=Some(Box::new(node));
-                    self.right=pointer;
+        } else {
+            match &mut self.right {
+                Some(r) => Node::insert_node_by_value(r, val),
+                None    => {
+                    let node    = Node::create_node(val);
+                    let pointer = Some(Box::new(node));
+                    self.right  = pointer;
                 }
             }
         }
     }
+
 }
-impl<String: std::fmt::Debug + std::cmp::PartialOrd> Tree<String>{
-    pub fn create_tree()->Tree<String>{
+impl<T: std::fmt::Debug + std::cmp::PartialOrd> Tree<T> {
+
+    pub fn create_tree() -> Tree<T> {
         Tree{
             root: None
         }
     }
-    pub fn pre_order(&self){
-        match &self.root{
-            Some(p)=>Node::pre_order(&p),
-            None=>println!("The Tree is empty")
+
+    #[allow(dead_code)]
+    pub fn pre_order(&self) {
+        match &self.root {
+            Some(p) => Node::pre_order(&p),
+            None    => println!("The Tree is empty")
         }
     }
-    pub fn in_order(&self){
-        match &self.root{
-            Some(p)=>Node::in_order(&p),
-            None=>println!("The Tree is empty")
+
+    #[allow(dead_code)]
+    pub fn in_order(&self) {
+        match &self.root {
+            Some(p) => Node::in_order(&p),
+            None    => println!("The Tree is empty")
         }
     }
-    pub fn post_order(&self){
-        match &self.root{
-            Some(p)=>Node::post_order(&p),
-            None=>println!("The Tree is empty")
+
+    pub fn post_order(&self) {
+        match &self.root {
+            Some(p) => Node::post_order(&p),
+            None    => println!("The Tree is empty")
         }
     }
-    pub fn insert_node(&mut self,val:String){
-        match &mut self.root{
-            Some(p)=>{Node::insert_node(p,val)},
-            None=>{
-                let node=Node::create_node(val);
-                let pointer=Some(Box::new(node));
-                self.root=pointer;
+
+    #[allow(dead_code)]
+    pub fn insert_node_by_value(&mut self, val: T) {
+        match &mut self.root {
+            Some(p) => Node::insert_node_by_value(p, val),
+            None    => {
+                let node    = Node::create_node(val);
+                let pointer = Some(Box::new(node));
+                self.root   = pointer;
             }
         }
     }
+
+    pub fn insert_first(&mut self, root: Option<Box<Node<T>>>) {
+        self.root = root;
+    }
+
 }
