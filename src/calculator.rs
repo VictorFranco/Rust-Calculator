@@ -4,7 +4,7 @@ use crate::tree::Node as Node;
 
 #[allow(dead_code)]
 pub fn compute(instructions: &[&str]) -> Result<f64, &'static str> {
-    let mut stack : Stack = Stack::create_stack();
+    let mut stack : Stack<f64, 20> = Stack::create_stack(0.0);
     let mut num1  : f64 = 0.0;
     let mut num2  : f64 = 0.0;
     let operators = ["+", "-", "*", "/"];
@@ -12,8 +12,8 @@ pub fn compute(instructions: &[&str]) -> Result<f64, &'static str> {
     for instruction in instructions.iter() {
         let expression = *instruction;
         if operators.contains(&expression) {
-            pop(&mut stack, &mut num1);
-            pop(&mut stack, &mut num2);
+            Stack::pop(&mut stack, &mut num1).unwrap();
+            Stack::pop(&mut stack, &mut num2).unwrap();
             let result = match expression {
                 "+" => num2+num1,
                 "-" => num2-num1,
@@ -26,16 +26,16 @@ pub fn compute(instructions: &[&str]) -> Result<f64, &'static str> {
                 },
                 _   => 0.0
             };
-            push(&mut stack, result);
+            Stack::push(&mut stack, result).unwrap();
         } else {
             let number: f64 = expression.parse::<f64>().unwrap();
-            push(&mut stack, number);
+            Stack::push(&mut stack, number).unwrap();
         }
     }
 
-    if stack.sp != 0 {
+    if stack.top != 0 {
         Err("Error: Stack is not empty")
-    }else {
+    } else {
         Ok(stack.array[0])
     }
 }
@@ -47,18 +47,6 @@ pub fn get_math_expre(instructions: &[&str]) -> String {
         math_expre.push_str(" ");
     }
     math_expre
-}
-
-fn push(stack: &mut Stack, num: f64) {
-    if !Stack::push(stack, num) {
-        panic!("Error: Stack overflow");
-    }
-}
-
-fn pop(stack: &mut Stack, num: &mut f64) {
-    if !Stack::pop(stack, num) {
-        panic!("Error: Stack underflow");
-    }
 }
 
 pub fn split_by_operator<'a>(instructions: &'a[&str], operator: &str) -> [&'a[&'a str]; 2] {

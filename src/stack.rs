@@ -1,45 +1,48 @@
 //N = array size
-const N:usize = 10;
 
-pub struct Stack {
-    pub array : [f64; N],
-    pub sp    : i32
+pub struct Stack<T, const N: usize> {
+    pub array   : [T; N],
+    pub top     : i32,
+    pub default : T
 }
 
-impl Stack {
+impl<T: std::marker::Copy, const N: usize> Stack <T, N>{
 
-    pub fn create_stack() -> Stack {
+    pub fn create_stack(default: T) -> Stack<T, N> {
         Stack {
-            array : [0.0; N],
-            sp    : -1
+            array    : [default; N],
+            top      : -1,
+            default  : default
         }
     }
 
-    pub fn push(&mut self,value:f64) -> bool {
+    pub fn push(&mut self,value:T) -> Result<(), &str> {
         if !self.is_full() {
-            self.sp = self.sp + 1;
-            self.array[self.sp as usize] = value;
-            return true
+            self.top = self.top + 1;
+            self.array[self.top as usize] = value;
+            Ok(())
+        } else {
+            Err("Error: Stack overflow")
         }
-        return false
     }
 
-    pub fn pop(&mut self,value:&mut f64) -> bool {
+    pub fn pop(&mut self,value:&mut T) -> Result<(), &str> {
         if !self.is_empty() {
-            *value  = self.array[self.sp as usize];
-            self.array[self.sp as usize] = 0.0;
-            self.sp = self.sp - 1;
-            return true
+            *value  = self.array[self.top as usize];
+            self.array[self.top as usize] = self.default;
+            self.top = self.top - 1;
+            Ok(())
+        } else {
+            Err("Error: Stack underflow")
         }
-        return false
     }
 
     pub fn is_full(&self) -> bool {
-        self.sp == (N as i32) - 1
+        self.top == (N as i32) - 1
     }
 
     pub fn is_empty(&self) -> bool {
-        self.sp == -1
+        self.top == -1
     }
 
 }
