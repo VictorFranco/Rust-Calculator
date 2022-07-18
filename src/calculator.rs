@@ -61,17 +61,18 @@ pub fn split_by_operator<'a>(instructions: &'a[&str], operator: &str) -> [&'a[&'
 }
 
 pub fn postfix_expression(instructions: &[&str]) {
-    let mut tree: Tree<String> = Tree::create_tree();
+    let mut tree: Tree<&str> = Tree::create_tree();
     let root_node = expression_tree(&instructions);
+    let mut stack: Stack<&str, 200> = Stack::create_stack("");
     Tree::insert_first(&mut tree, root_node);
-    Tree::post_order(&tree);
-    println!();
+    Tree::post_order(&tree, &mut stack);
+    println!("{:?}", stack);
 }
 
-pub fn expression_tree(instructions: &[&str]) -> Option<Box<Node<String>>> {
+pub fn expression_tree<'a>(instructions: &'a[&str]) -> Option<Box<Node<&'a str>>> {
 
     if instructions.len() == 1 {
-        let operand_node = Node::create_node(instructions.concat()); // leaf node
+        let operand_node: Node<&'a str> = Node::create_node(instructions[0]); // leaf node
         return Some(Box::new(operand_node)); // return smart pointer
     }
 
@@ -81,9 +82,9 @@ pub fn expression_tree(instructions: &[&str]) -> Option<Box<Node<String>>> {
         let last_operator = instructions.iter().rposition(|&instruction| group.contains(&instruction));
         match last_operator {
             Some(index) => {
-                let operator = instructions[index];
+                let operator: &'a str = instructions[index];
                 let split = split_by_operator(&instructions, operator);
-                let mut operator_node = Node::create_node(operator.to_string()); // internal node
+                let mut operator_node = Node::create_node(operator); // internal node
                 operator_node.left    = expression_tree(split[0]);   // generate sub-trees
                 operator_node.right   = expression_tree(split[1]);
                 return Some(Box::new(operator_node));

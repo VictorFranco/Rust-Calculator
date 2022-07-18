@@ -1,3 +1,5 @@
+use crate::stack::Stack as Stack;
+
 pub struct Node<T> {
     pub left  : Option<Box<Node<T>>>,
     pub right : Option<Box<Node<T>>>,
@@ -8,60 +10,54 @@ pub struct Tree<T> {
     pub root  : Option<Box<Node<T>>>
 }
 
-impl<T: std::fmt::Debug + std::cmp::PartialOrd> Node<T> {
+impl<T: std::fmt::Debug + std::cmp::PartialOrd + std::marker::Copy> Node<T> {
 
-    pub fn pre_order(&self) {
-        print!("{:?}", self.value);
+    pub fn pre_order<const N: usize>(&self, stack: &mut Stack<T, N>) {
+        (*stack).push(self.value).unwrap();
         match &self.left {
             Some(p) => {
-                print!("(");
-                Node::pre_order(&p);
+                Node::pre_order(&p, stack);
             },
             None    => {},
         }
         match &self.right {
             Some(p) => {
-                Node::pre_order(&p);
-                print!(")");
+                Node::pre_order(&p, stack);
             },
             None    => {},
         }
     }
 
-    pub fn in_order(&self) {
+    pub fn in_order<const N: usize>(&self, stack: &mut Stack<T, N>) {
         match &self.left {
             Some(p) => {
-                print!("(");
-                Node::in_order(&p);
+                Node::in_order(&p, stack);
             },
             None    => {},
         }
-        print!("{:?}", self.value);
+        (*stack).push(self.value).unwrap();
         match &self.right {
             Some(p) => {
-                Node::in_order(&p);
-                print!(")");
+                Node::in_order(&p, stack);
             },
             None    => {},
         }
     }
 
-    pub fn post_order(&self) {
+    pub fn post_order<const N: usize>(&self, stack: &mut Stack<T, N>) {
         match &self.left {
             Some(p) => {
-                print!("(");
-                Node::post_order(&p);
+                Node::post_order(&p, stack);
             },
             None    => {},
         }
         match &self.right {
             Some(p) => {
-                Node::post_order(&p);
-                print!(")");
+                Node::post_order(&p, stack);
             },
             None    => {},
         }
-        print!("{:?}", self.value);
+        (*stack).push(self.value).unwrap();
     }
 
     pub fn create_node(val: T) -> Node<T> {
@@ -95,7 +91,7 @@ impl<T: std::fmt::Debug + std::cmp::PartialOrd> Node<T> {
     }
 
 }
-impl<T: std::fmt::Debug + std::cmp::PartialOrd> Tree<T> {
+impl<T: std::fmt::Debug + std::cmp::PartialOrd + std::marker::Copy> Tree<T> {
 
     pub fn create_tree() -> Tree<T> {
         Tree{
@@ -104,24 +100,24 @@ impl<T: std::fmt::Debug + std::cmp::PartialOrd> Tree<T> {
     }
 
     #[allow(dead_code)]
-    pub fn pre_order(&self) {
+    pub fn pre_order<const N: usize>(&self, stack: &mut Stack<T, N>) {
         match &self.root {
-            Some(p) => Node::pre_order(&p),
+            Some(p) => Node::pre_order(&p, stack),
             None    => println!("The Tree is empty")
         }
     }
 
     #[allow(dead_code)]
-    pub fn in_order(&self) {
+    pub fn in_order<const N: usize>(&self, stack: &mut Stack<T, N>) {
         match &self.root {
-            Some(p) => Node::in_order(&p),
+            Some(p) => Node::in_order(&p, stack),
             None    => println!("The Tree is empty")
         }
     }
 
-    pub fn post_order(&self) {
+    pub fn post_order<const N: usize>(&self, stack: &mut Stack<T, N>) {
         match &self.root {
-            Some(p) => Node::post_order(&p),
+            Some(p) => Node::post_order(&p, stack),
             None    => println!("The Tree is empty")
         }
     }
