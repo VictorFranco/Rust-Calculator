@@ -1,6 +1,5 @@
 //N = array size
 
-#[derive(Debug)]
 pub struct Stack<T, const N: usize> {
     pub array   : [T; N],
     pub top     : i32,

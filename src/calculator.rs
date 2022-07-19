@@ -11,6 +11,8 @@ pub fn compute(instructions: &[&str]) -> Result<f64, &'static str> {
 
     for instruction in instructions.iter() {
         let expression = *instruction;
+        if expression == "" { break }
+
         if operators.contains(&expression) {
             Stack::pop(&mut stack, &mut num1).unwrap();
             Stack::pop(&mut stack, &mut num2).unwrap();
@@ -40,13 +42,14 @@ pub fn compute(instructions: &[&str]) -> Result<f64, &'static str> {
     }
 }
 
-pub fn get_math_expre(instructions: &[&str]) -> String {
+pub fn show_math_expre(instructions: &[&str]) {
     let mut math_expre = String::new();
-    for instruction in instructions.iter() {
+    for &instruction in instructions.iter() {
+        if instruction == "" { break }
         math_expre.push_str(instruction);
         math_expre.push_str(" ");
     }
-    math_expre
+    println!("{}", math_expre);
 }
 
 pub fn split_by_operator<'a>(instructions: &'a[&str], operator: &str) -> [&'a[&'a str]; 2] {
@@ -60,13 +63,13 @@ pub fn split_by_operator<'a>(instructions: &'a[&str], operator: &str) -> [&'a[&'
     splits
 }
 
-pub fn postfix_expression(instructions: &[&str]) {
+pub fn postfix_expression<'a>(instructions: &'a[&str]) -> Stack<&'a str, 200>{
     let mut tree: Tree<&str> = Tree::create_tree();
     let root_node = expression_tree(&instructions);
     let mut stack: Stack<&str, 200> = Stack::create_stack("");
     Tree::insert_first(&mut tree, root_node);
     Tree::post_order(&tree, &mut stack);
-    println!("{:?}", stack);
+    stack
 }
 
 pub fn expression_tree<'a>(instructions: &'a[&str]) -> Option<Box<Node<&'a str>>> {
