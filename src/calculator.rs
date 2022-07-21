@@ -2,7 +2,6 @@ use crate::stack::Stack as Stack;
 use crate::tree::Tree as Tree;
 use crate::tree::Node as Node;
 
-#[allow(dead_code)]
 pub fn compute(instructions: &[&str]) -> Result<f64, &'static str> {
     let mut stack : Stack<f64, 20> = Stack::create_stack(0.0);
     let mut num1  : f64 = 0.0;
@@ -42,6 +41,7 @@ pub fn compute(instructions: &[&str]) -> Result<f64, &'static str> {
     }
 }
 
+#[allow(dead_code)]
 pub fn show_math_expre(instructions: &[&str]) {
     let mut math_expre = String::new();
     for &instruction in instructions.iter() {
@@ -52,12 +52,38 @@ pub fn show_math_expre(instructions: &[&str]) {
     println!("{}", math_expre);
 }
 
+pub fn get_math_array<'a>(instructions: &'a str) -> [&'a str; 200] {
+    let mut math_expre: [&'a str; 200] = [""; 200];
+    let mut counter = 0;    // array index
+    let mut wait = 0;       // wait for digits
+    for (index, character) in instructions.chars().enumerate() {
+        match (character, wait) {
+            ('+' | '-', 0) => {             // positive or negative sign
+                math_expre[counter] = &instructions[index - wait .. index + 1];
+                wait = wait + 1;
+            },
+            ('+' | '-' | '*' | '/', _) => { // binary operations
+                counter = counter + 1;
+                math_expre[counter] = &instructions[index .. index + 1];
+                counter = counter + 1;
+                wait = 0;
+            },
+            (' ', _) => {},                 // ignore whitespaces
+            _   => {                        // add a digit
+                math_expre[counter] = &instructions[index - wait .. index + 1];
+                wait = wait + 1;
+            }
+        }
+    }
+    math_expre
+}
+
 pub fn split_by_operator<'a>(instructions: &'a[&str], operator: &str) -> [&'a[&'a str]; 2] {
     let mut splits: [&'a[&'a str]; 2] = [&[""]; 2];
     for (index, instruction) in instructions.iter().enumerate() {
         if instruction == &operator {
-            splits[0]  =  &instructions[..index];
-            splits[1]  =  &instructions[index+1..];
+            splits[0]  =  &instructions[.. index];
+            splits[1]  =  &instructions[index + 1 ..];
         }
     }
     splits
@@ -73,12 +99,6 @@ pub fn postfix_expression<'a>(instructions: &'a[&str]) -> Stack<&'a str, 200>{
 }
 
 pub fn expression_tree<'a>(instructions: &'a[&str]) -> Option<Box<Node<&'a str>>> {
-
-    if instructions.len() == 1 {
-        let operand_node: Node<&'a str> = Node::create_node(instructions[0]); // leaf node
-        return Some(Box::new(operand_node)); // return smart pointer
-    }
-
     let order = [["+", "-"], ["*", "/"]];    // order of operations
     for group in order.iter() {
         // get last operator by order
@@ -96,5 +116,6 @@ pub fn expression_tree<'a>(instructions: &'a[&str]) -> Option<Box<Node<&'a str>>
         }
     }
 
-    return None;
+    let operand_node: Node<&'a str> = Node::create_node(instructions[0]); // leaf node
+    return Some(Box::new(operand_node)); // return smart pointer
 }

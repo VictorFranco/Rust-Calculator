@@ -1,19 +1,21 @@
 mod stack;
 mod calculator;
 mod tree;
+use std::io::{stdin, stdout, Write};
 
 fn main() {
     println!("Rust Calculator\n");
 
-    let instructions = ["1", "+", "2", "*", "3", "-", "1", "+", "1"];
-
-    println!("Infix expression:");
-    calculator::show_math_expre(&instructions);
-
-    println!("\nPostfix expression:");
-    let postfix = calculator::postfix_expression(&instructions);
-    calculator::show_math_expre(&postfix.array);
-
-    println!("\nResult:");
-    println!("{}", calculator::compute(&postfix.array).unwrap());
+    loop {
+        let mut instructions = String::new();
+        print!(">> ");
+        stdout().flush().unwrap();                      // ensure print is emitted immediately
+        stdin().read_line(&mut instructions).unwrap();  // get user input
+        let instructions = instructions.trim();         // remove new line
+        if  instructions == "" { continue }             // ignore input without instructions
+        let instructions = calculator::get_math_array(&instructions);
+        let postfix = calculator::postfix_expression(&instructions);
+        print!(">> ");
+        println!("{}", calculator::compute(&postfix.array).unwrap());
+    }
 }
