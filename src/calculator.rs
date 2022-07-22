@@ -1,6 +1,8 @@
 use crate::stack::Stack as Stack;
 use crate::tree::Tree as Tree;
 use crate::tree::Node as Node;
+//N = array size
+const N: usize = 200;
 
 pub fn compute(instructions: &[&str]) -> Result<f64, &'static str> {
     let mut stack : Stack<f64, 20> = Stack::create_stack(0.0);
@@ -52,8 +54,8 @@ pub fn show_math_expre(instructions: &[&str]) {
     println!("{}", math_expre);
 }
 
-pub fn get_math_array<'a>(instructions: &'a str) -> [&'a str; 200] {
-    let mut math_expre: [&'a str; 200] = [""; 200];
+pub fn get_math_array<'a>(instructions: &'a str) -> [&'a str; N] {
+    let mut math_expre: [&'a str; N] = [""; N];
     let mut counter = 0;    // array index
     let mut wait = 0;       // wait for digits
     for (index, character) in instructions.chars().enumerate() {
@@ -89,10 +91,10 @@ pub fn split_by_operator<'a>(instructions: &'a[&str], operator: &str) -> [&'a[&'
     splits
 }
 
-pub fn postfix_expression<'a>(instructions: &'a[&str]) -> Stack<&'a str, 200>{
+pub fn postfix_expression<'a>(instructions: &'a[&str]) -> Stack<&'a str, N>{
     let mut tree: Tree<&str> = Tree::create_tree();
     let root_node = expression_tree(&instructions);
-    let mut stack: Stack<&str, 200> = Stack::create_stack("");
+    let mut stack: Stack<&str, N> = Stack::create_stack("");
     Tree::insert_first(&mut tree, root_node);
     Tree::post_order(&tree, &mut stack);
     stack
