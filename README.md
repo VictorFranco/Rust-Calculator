@@ -3,7 +3,11 @@
 
 A Rust calculator which uses expression trees and stacks to work.
 
-![Demo](https://i.imgur.com/LuiXeBe.gif)
+![Demo](https://i.imgur.com/8Cabnog.gif "Demo")
+
+## Features
+* Numbers with multiple signs are allowed
+* Spaces are optional
 
 ## LICENSE
 [GPLv3.0](LICENSE)
